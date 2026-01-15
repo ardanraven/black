@@ -235,7 +235,6 @@
 
     <!-- INTRO DRAMÁTICA -->
     <div id="intro-overlay">
-        <!-- Logo FULL sem cortes -->
         <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Ordo Rex Lucifer Logo" class="intro-logo mb-8">
         <h1 class="text-xl md:text-3xl font-display text-white tracking-[0.3em] md:tracking-[0.5em] uppercase opacity-0 animate-fade-in-slow text-center px-4" style="animation-delay: 0.5s;">Ordo Rex Lucifer</h1>
         <p class="text-primary-500 text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase mt-4 opacity-0 animate-fade-in-slow" style="animation-delay: 1.5s;">O Conhecimento é Poder</p>
@@ -558,36 +557,43 @@
                         </form>
 
                         <div class="space-y-8">
-                            <!-- Gestão de Alunos (AVANÇADA) -->
-                            <div class="bg-black/40 p-4 md:p-6 border border-white/5 flex flex-col h-full relative group">
+                            <!-- Gestão de Alunos -->
+                            <div class="bg-black/40 p-4 md:p-6 border border-white/5 flex flex-col h-[350px] relative group">
                                 <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-accent/20 opacity-0 group-hover:opacity-100 transition duration-500 blur"></div>
-                                <div class="relative bg-black p-4 h-full">
+                                <div class="relative bg-black p-4 h-full flex flex-col">
                                     <h4 class="text-gray-400 text-xs uppercase tracking-widest mb-6 flex items-center justify-between border-b border-white/5 pb-2">
                                         <span><i class="fas fa-users mr-2"></i>Livro dos Iniciados</span>
                                         <span id="student-count" class="text-primary-500 font-display text-lg">0</span>
                                     </h4>
                                     
-                                    <form id="create-account-form" class="flex flex-col gap-3 mb-6">
+                                    <form id="create-account-form" class="flex flex-col gap-3 mb-6 shrink-0">
                                         <input type="email" id="new-email" placeholder="Email do Neófito" class="input-luxe p-3 text-xs" required>
                                         <input type="password" id="new-password" placeholder="Senha de Acesso" class="input-luxe p-3 text-xs" required>
                                         <button type="submit" id="create-student-btn" class="bg-white/5 hover:bg-white/10 text-gray-300 py-2 text-[10px] uppercase tracking-widest transition border border-white/10">Registrar (+30 dias)</button>
                                         <p id="account-status" class="text-xs h-4 text-center"></p>
                                     </form>
 
-                                    <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[250px]">
+                                    <div class="flex-1 overflow-y-auto custom-scrollbar">
                                         <div id="students-list-container" class="space-y-2"></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Gestão de Módulos -->
-                            <div class="bg-black/40 p-4 md:p-6 border border-white/5">
-                                <h4 class="text-gray-400 text-xs uppercase tracking-widest mb-4">Caminhos (Trilhas)</h4>
-                                <form id="create-section-form" class="flex gap-2 mb-4">
-                                    <input type="text" id="section-name" placeholder="Nome do Caminho" class="input-luxe w-full p-2 text-xs">
-                                    <button type="submit" class="text-primary-400 hover:text-white px-2"><i class="fas fa-plus"></i></button>
+                            <!-- Gestão de Módulos (Melhorado) -->
+                            <div class="bg-black/40 p-4 md:p-6 border border-white/5 h-[300px] flex flex-col">
+                                <h4 class="text-gray-400 text-xs uppercase tracking-widest mb-4 flex justify-between items-center">
+                                    <span><i class="fas fa-map-signs mr-2"></i>Gerenciador de Seções</span>
+                                    <span id="section-count" class="bg-primary-900/30 text-primary-400 px-2 py-1 text-[10px] rounded">0 Trilhas</span>
+                                </h4>
+                                
+                                <form id="create-section-form" class="flex gap-2 mb-4 shrink-0">
+                                    <input type="text" id="section-name" placeholder="Nome da Nova Trilha" class="input-luxe w-full p-2 text-xs">
+                                    <button type="submit" class="bg-primary-900/30 border border-primary-500/30 text-primary-400 hover:bg-primary-500 hover:text-black px-4 transition"><i class="fas fa-plus"></i></button>
                                 </form>
-                                <div id="sections-list-admin" class="max-h-32 overflow-y-auto text-xs text-gray-500 custom-scrollbar space-y-2"></div>
+                                
+                                <div id="sections-list-admin" class="flex-1 overflow-y-auto custom-scrollbar space-y-2 pr-2">
+                                    <!-- Sections injected here -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1038,16 +1044,30 @@
                 const select = document.getElementById('post-section');
                 const container = document.getElementById('sections-cards-container');
                 const listAdmin = document.getElementById('sections-list-admin');
+                const sectionCount = document.getElementById('section-count');
                 
                 select.innerHTML = '<option value="">Selecione o Caminho</option>';
                 container.innerHTML = '';
                 listAdmin.innerHTML = '';
+                
+                let count = 0;
 
                 snap.forEach(d => {
+                    count++;
                     const s = { id: d.id, ...d.data() };
                     allSections.push(s);
                     select.add(new Option(s.name, s.id));
-                    listAdmin.innerHTML += `<div class="flex justify-between p-2 border-b border-white/5 uppercase">${s.name} <button onclick="deleteSection('${s.id}')" class="text-red-900 hover:text-red-500"><i class="fas fa-times"></i></button></div>`;
+                    
+                    // Admin List Item (Enhanced)
+                    const item = document.createElement('div');
+                    item.className = "flex justify-between items-center p-2 bg-white/5 border border-white/5 hover:bg-white/10 transition";
+                    item.innerHTML = `
+                        <span class="text-xs uppercase tracking-wider text-gray-300 font-display truncate">${s.name}</span>
+                        <button onclick="deleteSection('${s.id}')" class="text-red-900 hover:text-red-500 transition px-2" title="Apagar Trilha">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    listAdmin.appendChild(item);
                     
                     // LÓGICA DE FILTRAGEM DE MÓDULOS PARA O ALUNO
                     let isAllowed = true;
@@ -1071,6 +1091,8 @@
                         container.appendChild(card);
                     }
                 });
+                sectionCount.textContent = `${count} Trilhas`;
+                if(count === 0) listAdmin.innerHTML = '<p class="text-gray-600 text-xs italic text-center py-4">Nenhuma trilha criada.</p>';
             });
         }
 
@@ -1287,7 +1309,7 @@
             if(n) { await addDoc(collection(db, "sections"), { name: n, createdAt: new Date() }); e.target.reset(); }
         });
 
-        window.deleteSection = async (id) => { if(confirm("Selar este Caminho?")) await deleteDoc(doc(db, "sections", id)); };
+        window.deleteSection = async (id) => { if(confirm("Selar este Caminho (Excluir Trilha)?")) await deleteDoc(doc(db, "sections", id)); };
 
         document.getElementById('create-post-form').addEventListener('submit', async (e) => {
             e.preventDefault();
