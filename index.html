@@ -143,10 +143,13 @@
             transition: opacity 2s ease-out;
         }
         .intro-logo {
-            width: 300px; 
+            width: 250px; 
             height: auto; 
             object-fit: contain;
             animation: pulseIntro 3s infinite alternate;
+        }
+        @media (max-width: 640px) {
+            .intro-logo { width: 180px; }
         }
         @keyframes pulseIntro {
             0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 134, 11, 0.1)); }
@@ -215,13 +218,16 @@
 
         /* Floating WhatsApp Button */
         .float-wa {
-            position: fixed; width: 60px; height: 60px; bottom: 40px; right: 40px;
+            position: fixed; width: 60px; height: 60px; bottom: 20px; right: 20px;
             background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px;
             box-shadow: 0px 0px 20px rgba(37, 211, 102, 0.4); z-index: 100;
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s;
         }
         .float-wa:hover { transform: scale(1.1); box-shadow: 0px 0px 30px rgba(37, 211, 102, 0.6); }
+        @media (min-width: 768px) {
+            .float-wa { width: 60px; height: 60px; bottom: 40px; right: 40px; font-size: 30px; }
+        }
 
     </style>
 </head>
@@ -231,8 +237,8 @@
     <div id="intro-overlay">
         <!-- Logo FULL sem cortes -->
         <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Ordo Rex Lucifer Logo" class="intro-logo mb-8">
-        <h1 class="text-3xl font-display text-white tracking-[0.5em] uppercase opacity-0 animate-fade-in-slow" style="animation-delay: 0.5s;">Ordo Rex Lucifer</h1>
-        <p class="text-primary-500 text-xs tracking-[0.3em] uppercase mt-4 opacity-0 animate-fade-in-slow" style="animation-delay: 1.5s;">O Conhecimento é Poder</p>
+        <h1 class="text-xl md:text-3xl font-display text-white tracking-[0.3em] md:tracking-[0.5em] uppercase opacity-0 animate-fade-in-slow text-center px-4" style="animation-delay: 0.5s;">Ordo Rex Lucifer</h1>
+        <p class="text-primary-500 text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase mt-4 opacity-0 animate-fade-in-slow" style="animation-delay: 1.5s;">O Conhecimento é Poder</p>
     </div>
 
     <!-- WhatsApp Button -->
@@ -280,17 +286,18 @@
         </div>
 
         <!-- HEADER -->
-        <header class="fixed top-0 w-full z-40 bg-black/90 backdrop-blur-md border-b border-primary-500/10 h-24 transition-all duration-300">
-            <div class="container mx-auto px-6 h-full flex justify-between items-center">
-                <div class="flex items-center gap-4 cursor-pointer group" onclick="showView('home-view')">
+        <header class="fixed top-0 w-full z-40 bg-black/90 backdrop-blur-md border-b border-primary-500/10 h-16 md:h-24 transition-all duration-300">
+            <div class="container mx-auto px-4 md:px-6 h-full flex justify-between items-center">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="showView('home-view')">
                     <!-- LOGO DA ORDEM NO HEADER -->
-                    <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Logo" class="h-14 w-14 rounded-full border border-primary-500/30 group-hover:border-primary-400 transition shadow-[0_0_15px_rgba(184,134,11,0.2)] object-cover">
+                    <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Logo" class="h-10 w-10 md:h-14 md:w-14 rounded-full border border-primary-500/30 group-hover:border-primary-400 transition shadow-[0_0_15px_rgba(184,134,11,0.2)] object-cover">
                     <div class="flex flex-col">
-                        <span class="text-[9px] text-accent uppercase tracking-[0.4em] font-bold">Ordo</span>
-                        <h1 class="text-xl font-display font-bold text-white tracking-widest group-hover:text-primary-400 transition">REX LUCIFER</h1>
+                        <span class="text-[8px] md:text-[9px] text-accent uppercase tracking-[0.4em] font-bold hidden md:block">Ordo</span>
+                        <h1 class="text-sm md:text-xl font-display font-bold text-white tracking-widest group-hover:text-primary-400 transition">REX LUCIFER</h1>
                     </div>
                 </div>
 
+                <!-- MENU DESKTOP -->
                 <nav class="hidden md:flex items-center space-x-10">
                     <button data-view="home-view" class="internal-link text-[10px] font-display font-bold tracking-[0.2em] text-gray-500 hover:text-primary-400 uppercase transition">Templo</button>
                     <button data-view="blog-view" class="internal-link text-[10px] font-display font-bold tracking-[0.2em] text-gray-500 hover:text-primary-400 uppercase transition">Arquivos da Chama</button>
@@ -310,10 +317,26 @@
                     </div>
                     <button id="login-btn" class="hidden px-6 py-2 border border-primary-500/30 text-[10px] font-display font-bold text-primary-400 uppercase tracking-widest hover:bg-primary-900/20 hover:border-primary-400 transition">Acesso</button>
                 </nav>
+
+                <!-- MOBILE MENU BUTTON -->
+                <button id="mobile-menu-btn" class="md:hidden text-white text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <!-- MOBILE MENU OVERLAY -->
+            <div id="mobile-menu" class="hidden absolute top-16 left-0 w-full bg-black/95 border-b border-primary-500/20 p-6 flex-col gap-4 text-center z-50">
+                <button data-view="home-view" class="internal-link text-xs font-display font-bold tracking-[0.2em] text-white py-2 uppercase">Templo</button>
+                <button data-view="blog-view" class="internal-link text-xs font-display font-bold tracking-[0.2em] text-white py-2 uppercase">Arquivos</button>
+                <a href="https://wa.me/5521975685161" target="_blank" class="text-xs font-display font-bold tracking-[0.2em] text-white py-2 uppercase hover:text-green-400"><i class="fab fa-whatsapp mr-1"></i> Contato</a>
+                
+                <div id="mobile-user-actions" class="border-t border-white/10 pt-4 mt-2 flex flex-col gap-3">
+                    <!-- Injected via JS -->
+                </div>
             </div>
         </header>
 
-        <main class="pt-24 min-h-screen relative z-10">
+        <main class="pt-16 md:pt-24 min-h-screen relative z-10">
             
             <!-- HOME VIEW -->
             <div id="home-view" class="view-container">
@@ -321,27 +344,27 @@
                 <section class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
                     <!-- Fundo Sombrio com Brilho Central -->
                     <div class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(184,134,11,0.15)_0%,rgba(0,0,0,1)_70%)]"></div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-primary-500/5 rounded-full animate-pulse-slow pointer-events-none"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[800px] md:h-[800px] border border-primary-500/5 rounded-full animate-pulse-slow pointer-events-none"></div>
                     
-                    <div class="relative z-10 max-w-5xl mx-auto space-y-8">
-                        <div class="flex justify-center mb-6">
-                            <i class="fas fa-fire text-3xl text-accent animate-pulse"></i>
+                    <div class="relative z-10 max-w-5xl mx-auto space-y-6 md:space-y-8">
+                        <div class="flex justify-center mb-4 md:mb-6">
+                            <i class="fas fa-fire text-2xl md:text-3xl text-accent animate-pulse"></i>
                         </div>
                         
-                        <h2 class="text-primary-500 text-xs md:text-sm tracking-[0.8em] uppercase fade-in-up font-display border-b border-primary-500/20 pb-4 inline-block">
+                        <h2 class="text-primary-500 text-[10px] md:text-sm tracking-[0.5em] md:tracking-[0.8em] uppercase fade-in-up font-display border-b border-primary-500/20 pb-4 inline-block">
                             Lux Ex Tenebris
                         </h2>
                         
-                        <h1 class="text-5xl md:text-8xl font-display font-black text-white leading-tight fade-in-up uppercase" style="animation-delay: 0.2s">
+                        <h1 class="text-3xl md:text-5xl lg:text-8xl font-display font-black text-white leading-tight fade-in-up uppercase" style="animation-delay: 0.2s">
                             Desperte a <br><span class="text-gradient-gold">Divindade</span> Interior
                         </h1>
                         
-                        <p class="text-gray-400 max-w-2xl mx-auto text-lg font-body font-light leading-relaxed fade-in-up" style="animation-delay: 0.4s">
+                        <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-lg font-body font-light leading-relaxed fade-in-up px-4" style="animation-delay: 0.4s">
                             Bem-vindo à <strong>Ordo Rex Lucifer</strong>. Aqui, a escuridão não é o fim, mas o útero onde a verdadeira luz é forjada pela vontade indomável.
                         </p>
                         
-                        <div class="pt-10 fade-in-up flex justify-center gap-6" style="animation-delay: 0.6s">
-                            <button data-view="blog-view" class="internal-link px-12 py-4 bg-primary-900/20 border border-primary-500 text-primary-400 font-display text-xs font-bold tracking-[0.3em] uppercase hover:bg-primary-500 hover:text-black transition shadow-[0_0_30px_rgba(184,134,11,0.1)] relative group overflow-hidden">
+                        <div class="pt-8 md:pt-10 fade-in-up flex justify-center gap-6" style="animation-delay: 0.6s">
+                            <button data-view="blog-view" class="internal-link px-8 md:px-12 py-3 md:py-4 bg-primary-900/20 border border-primary-500 text-primary-400 font-display text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase hover:bg-primary-500 hover:text-black transition shadow-[0_0_30px_rgba(184,134,11,0.1)] relative group overflow-hidden">
                                 <span class="relative z-10">Iniciar a Jornada</span>
                                 <div class="absolute inset-0 bg-primary-500 opacity-0 group-hover:opacity-100 transition duration-500"></div>
                             </button>
@@ -350,45 +373,45 @@
                 </section>
 
                 <!-- FILOSOFIA & O DRAGÃO (EXTENSA) -->
-                <section class="py-32 px-6 bg-obsidian border-t border-primary-900/20 relative overflow-hidden">
+                <section class="py-20 md:py-32 px-6 bg-obsidian border-t border-primary-900/20 relative overflow-hidden">
                     <!-- Fundo do Dragão -->
                     <div class="absolute inset-0 z-0">
                         <img src="https://i.ibb.co/q4DcCM6/33333333.jpg" alt="Dragão Primordial" class="w-full h-full object-cover opacity-20 object-center">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
                     </div>
 
-                    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center relative z-10">
-                        <div class="order-2 md:order-1 space-y-10 text-justify">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center relative z-10">
+                        <div class="order-2 md:order-1 space-y-8 md:space-y-10 text-justify">
                             <div>
-                                <h3 class="text-4xl font-display text-white mb-2 flex items-center gap-4">
-                                    <span class="text-primary-500 text-6xl opacity-50">I.</span> A Doutrina do Dragão
+                                <h3 class="text-2xl md:text-4xl font-display text-white mb-2 flex items-center gap-4">
+                                    <span class="text-primary-500 text-4xl md:text-6xl opacity-50">I.</span> A Doutrina do Dragão
                                 </h3>
                                 <div class="h-[1px] w-24 bg-accent mt-4"></div>
                             </div>
                             
-                            <p class="text-gray-300 font-body leading-loose text-lg drop-shadow-lg">
+                            <p class="text-gray-300 font-body leading-loose text-sm md:text-lg drop-shadow-lg">
                                 O Dragão é o símbolo máximo da energia primordial e indomada. Na <strong>Ordo Rex Lucifer</strong>, ele representa a força latente que reside na base da espinha de cada iniciado, pronta para despertar e ascender aos céus da consciência.
                             </p>
                             
-                            <p class="text-gray-300 font-body leading-loose text-lg drop-shadow-lg">
+                            <p class="text-gray-300 font-body leading-loose text-sm md:text-lg drop-shadow-lg">
                                 Não tememos a besta interior; nós a montamos. O Dragão é a soberania sobre os instintos, transformando o caos bruto em poder focado e vontade direcionada. Quem domina o Dragão, domina a si mesmo.
                             </p>
 
                             <div class="bg-black/70 border-l-2 border-primary-500 p-6 backdrop-blur-sm">
-                                <p class="text-primary-400 font-display italic text-lg mb-2">"Do abismo primordial, o Dragão se ergue, não para destruir o mundo, mas para iluminar a mente daqueles que ousam olhar em seus olhos."</p>
-                                <p class="text-gray-500 text-xs uppercase tracking-widest">— Codex Draconis</p>
+                                <p class="text-primary-400 font-display italic text-sm md:text-lg mb-2">"Do abismo primordial, o Dragão se ergue, não para destruir o mundo, mas para iluminar a mente daqueles que ousam olhar em seus olhos."</p>
+                                <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-widest">— Codex Draconis</p>
                             </div>
                         </div>
 
                         <!-- Imagem Lateral (Luciferiana) -->
-                        <div class="order-1 md:order-2 flex justify-center relative h-[600px] items-center group">
+                        <div class="order-1 md:order-2 flex justify-center relative h-[400px] md:h-[600px] items-center group">
                              <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-accent/10 blur-[50px] rounded-full pointer-events-none animate-pulse"></div>
                              
                              <div class="relative w-full h-full border border-primary-500/20 p-2 bg-black/50 backdrop-blur-sm transform group-hover:scale-[1.02] transition duration-700">
                                  <img src="https://i.ibb.co/21p54bPq/22222222.jpg" alt="O Portador da Luz" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-700 grayscale group-hover:grayscale-0">
                                  <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
-                                     <span class="text-primary-500 text-xs uppercase tracking-[0.3em] font-bold">Lucifer</span>
-                                     <h4 class="text-white font-display text-2xl uppercase">O Arquétipo da Liberdade</h4>
+                                     <span class="text-primary-500 text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold">Lucifer</span>
+                                     <h4 class="text-white font-display text-xl md:text-2xl uppercase">O Arquétipo da Liberdade</h4>
                                  </div>
                              </div>
                         </div>
@@ -396,33 +419,33 @@
                 </section>
 
                 <!-- PILARES DA ORDEM (GRID - REFEITO COM SVGs ANIMADOS) -->
-                <section class="py-24 px-6 bg-void relative overflow-hidden">
+                <section class="py-20 md:py-24 px-6 bg-void relative overflow-hidden">
                     <div class="absolute top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
                     <div class="max-w-7xl mx-auto">
-                        <div class="text-center mb-16 space-y-4">
+                        <div class="text-center mb-12 md:mb-16 space-y-4">
                             <i class="fas fa-chess-king text-primary-500 text-3xl opacity-80"></i>
-                            <h3 class="text-4xl font-display text-white uppercase tracking-widest">Os Pilares da Ascensão</h3>
-                            <p class="text-gray-500 text-xs uppercase tracking-[0.3em]">As bases do nosso Templo</p>
+                            <h3 class="text-2xl md:text-4xl font-display text-white uppercase tracking-widest">Os Pilares da Ascensão</h3>
+                            <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-[0.3em]">As bases do nosso Templo</p>
                         </div>
 
-                        <div class="grid md:grid-cols-3 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Card 1 (Gnose) -->
                             <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black" onclick="showView('blog-view')">
-                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-primary-900/20 transition duration-700">
+                                <div class="h-40 md:h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-primary-900/20 transition duration-700">
                                     <!-- SVG Gnose Animado -->
-                                    <svg class="w-24 h-24 text-primary-500 animate-float" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <svg class="w-20 h-20 md:w-24 md:h-24 text-primary-500 animate-float" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
                                         <path d="M50 10 L90 50 L50 90 L10 50 Z" class="opacity-50" />
                                         <circle cx="50" cy="50" r="15" />
                                         <path d="M50 35 L50 65 M35 50 L65 50" />
                                     </svg>
                                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <div class="p-8 relative">
+                                <div class="p-6 md:p-8 relative">
                                     <div class="absolute -top-10 right-6 bg-black border border-primary-500 p-3 rounded-full">
                                         <i class="fas fa-book-dead text-2xl text-primary-500"></i>
                                     </div>
-                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Gnose <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Conhecimento</span></h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                    <h4 class="text-xl md:text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Gnose <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Conhecimento</span></h4>
+                                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed mb-6 min-h-[60px]">
                                         Estudo profundo de magia cerimonial, psicologia sombria e filosofia ocultista. O saber é a única arma que não enferruja.
                                     </p>
                                     <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Explorar Arquivos <i class="fas fa-arrow-right"></i></span>
@@ -431,20 +454,20 @@
 
                             <!-- Card 2 (Potentia) -->
                             <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black">
-                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-accent/20 transition duration-700">
+                                <div class="h-40 md:h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-accent/20 transition duration-700">
                                     <!-- SVG Potentia Animado -->
-                                    <svg class="w-24 h-24 text-accent animate-pulse-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+                                    <svg class="w-20 h-20 md:w-24 md:h-24 text-accent animate-pulse-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M50 15 Q80 15 80 50 Q80 85 50 85 Q20 85 20 50 Q20 15 50 15 Z" />
                                         <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="currentColor" opacity="0.5"/>
                                     </svg>
                                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <div class="p-8 relative">
+                                <div class="p-6 md:p-8 relative">
                                     <div class="absolute -top-10 right-6 bg-black border border-accent p-3 rounded-full">
                                         <i class="fas fa-fist-raised text-2xl text-accent"></i>
                                     </div>
-                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Potentia <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Poder Pessoal</span></h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                    <h4 class="text-xl md:text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Potentia <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Poder Pessoal</span></h4>
+                                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed mb-6 min-h-[60px]">
                                         Práticas para fortalecer a Vontade. Rituais de empoderamento e a arte de moldar a realidade conforme o desejo do Magista.
                                     </p>
                                     <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Ver Rituais <i class="fas fa-fire"></i></span>
@@ -453,21 +476,21 @@
 
                             <!-- Card 3 (Fraternitas) -->
                             <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black">
-                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-white/5 transition duration-700">
+                                <div class="h-40 md:h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-white/5 transition duration-700">
                                     <!-- SVG Fraternitas Animado -->
-                                    <svg class="w-24 h-24 text-gray-400 animate-spin-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <svg class="w-20 h-20 md:w-24 md:h-24 text-gray-400 animate-spin-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
                                         <circle cx="50" cy="50" r="30" stroke-dasharray="5,5" />
                                         <circle cx="50" cy="50" r="10" />
                                         <path d="M50 20 L50 80 M20 50 L80 50" />
                                     </svg>
                                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <div class="p-8 relative">
+                                <div class="p-6 md:p-8 relative">
                                     <div class="absolute -top-10 right-6 bg-black border border-white/20 p-3 rounded-full">
                                         <i class="fas fa-crown text-2xl text-white"></i>
                                     </div>
-                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Fraternitas <span class="text-[10px] block text-gray-600 tracking-widest mt-1">O Círculo Interno</span></h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                    <h4 class="text-xl md:text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Fraternitas <span class="text-[10px] block text-gray-600 tracking-widest mt-1">O Círculo Interno</span></h4>
+                                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed mb-6 min-h-[60px]">
                                         Uma comunidade seleta de iniciados. Aqui, a lealdade e a troca de experiências elevam todos os membros.
                                     </p>
                                     <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Unir-se à Ordem <i class="fas fa-user-plus"></i></span>
@@ -478,16 +501,16 @@
                 </section>
 
                 <!-- CALL TO ACTION FINAL -->
-                <section class="py-28 px-6 border-t border-primary-900/30 bg-[#020202] text-center relative overflow-hidden">
+                <section class="py-20 md:py-28 px-6 border-t border-primary-900/30 bg-[#020202] text-center relative overflow-hidden">
                      <div class="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent blur-[100px] pointer-events-none"></div>
-                    <div class="max-w-3xl mx-auto space-y-10 relative z-10">
+                    <div class="max-w-3xl mx-auto space-y-8 md:space-y-10 relative z-10">
                         <div class="mb-4">
-                            <i class="fas fa-skull text-4xl text-accent animate-pulse"></i>
+                            <i class="fas fa-skull text-3xl md:text-4xl text-accent animate-pulse"></i>
                         </div>
-                        <h3 class="text-4xl md:text-5xl font-display text-white uppercase leading-tight">
+                        <h3 class="text-3xl md:text-5xl font-display text-white uppercase leading-tight">
                             O Chamado do Abismo
                         </h3>
-                        <p class="text-gray-400 font-body leading-loose text-lg">
+                        <p class="text-gray-400 font-body leading-loose text-sm md:text-lg">
                             Muitos ouvem o sussurro, poucos têm a coragem de responder. <br>
                             Se você sente a Chama Negra queimar em seu peito, seu lugar é entre os Reis e Rainhas desta era.
                         </p>
@@ -496,7 +519,7 @@
                                 Requerer Iniciação
                             </button>
                         </div>
-                        <p class="text-[9px] text-gray-600 uppercase tracking-widest mt-8">A porta está aberta, mas o caminho é estreito.</p>
+                        <p class="text-[8px] md:text-[9px] text-gray-600 uppercase tracking-widest mt-8">A porta está aberta, mas o caminho é estreito.</p>
                     </div>
                 </section>
             </div>
@@ -505,19 +528,19 @@
             <div id="blog-view" class="view-container hidden max-w-7xl mx-auto pt-10 px-4">
                 
                 <!-- PAINEL ADMIN -->
-                <div id="admin-panel" class="hidden mb-16 p-8 bg-royal border border-primary-500/20 rounded-none relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <div id="admin-panel" class="hidden mb-16 p-4 md:p-8 bg-royal border border-primary-500/20 rounded-none relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                     <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent"></div>
-                    <h3 class="text-primary-400 font-display text-2xl mb-8 flex items-center gap-3 relative z-10"><i class="fas fa-chess-king"></i> Painel do Magister Templi</h3>
+                    <h3 class="text-primary-400 font-display text-xl md:text-2xl mb-8 flex items-center gap-3 relative z-10"><i class="fas fa-chess-king"></i> Painel do Magister Templi</h3>
                     
-                    <div class="grid lg:grid-cols-2 gap-12 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 relative z-10">
                         <form id="create-post-form" class="space-y-6">
                             <h4 class="text-gray-500 text-xs uppercase tracking-[0.2em] border-b border-white/5 pb-2">Novo Rito de Conhecimento</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input type="text" id="post-title" class="input-luxe w-full p-4 text-lg" placeholder="Nome do Ritual (Título)" required>
-                                <input type="text" id="post-subtitle" class="input-luxe w-full p-4 text-sm" placeholder="Arcano (Subtítulo)" required>
+                                <input type="text" id="post-title" class="input-luxe w-full p-4 text-sm md:text-lg" placeholder="Nome do Ritual (Título)" required>
+                                <input type="text" id="post-subtitle" class="input-luxe w-full p-4 text-xs md:text-sm" placeholder="Arcano (Subtítulo)" required>
                             </div>
                             
-                            <div class="p-6 bg-black border border-white/5 space-y-4">
+                            <div class="p-4 md:p-6 bg-black border border-white/5 space-y-4">
                                 <p class="text-[10px] text-accent uppercase tracking-widest font-bold"><i class="fab fa-google-drive mr-2"></i>Chaves do Drive</p>
                                 <input type="url" id="post-video-link" class="input-luxe w-full p-3 text-sm" placeholder="Link do VÍDEO (Google Drive)" required>
                                 <input type="url" id="post-pdf-link" class="input-luxe w-full p-3 text-sm" placeholder="Link do PDF (Google Drive)" required>
@@ -525,7 +548,7 @@
 
                             <textarea id="post-content" rows="3" class="input-luxe w-full p-4 text-sm font-body" placeholder="Palavras de introdução..."></textarea>
                             
-                            <div class="grid grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <select id="post-access" class="input-luxe w-full p-3 bg-black cursor-pointer text-xs uppercase"><option value="aberto">👁️ Exotérico (Aberto)</option><option value="pago">🗝️ Esotérico (Fechado)</option></select>
                                 <select id="post-section" class="input-luxe w-full p-3 bg-black cursor-pointer text-xs uppercase" required><option value="">Carregando Caminhos...</option></select>
                             </div>
@@ -536,7 +559,7 @@
 
                         <div class="space-y-8">
                             <!-- Gestão de Alunos (AVANÇADA) -->
-                            <div class="bg-black/40 p-6 border border-white/5 flex flex-col h-full relative group">
+                            <div class="bg-black/40 p-4 md:p-6 border border-white/5 flex flex-col h-full relative group">
                                 <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-accent/20 opacity-0 group-hover:opacity-100 transition duration-500 blur"></div>
                                 <div class="relative bg-black p-4 h-full">
                                     <h4 class="text-gray-400 text-xs uppercase tracking-widest mb-6 flex items-center justify-between border-b border-white/5 pb-2">
@@ -558,7 +581,7 @@
                             </div>
 
                             <!-- Gestão de Módulos -->
-                            <div class="bg-black/40 p-6 border border-white/5">
+                            <div class="bg-black/40 p-4 md:p-6 border border-white/5">
                                 <h4 class="text-gray-400 text-xs uppercase tracking-widest mb-4">Caminhos (Trilhas)</h4>
                                 <form id="create-section-form" class="flex gap-2 mb-4">
                                     <input type="text" id="section-name" placeholder="Nome do Caminho" class="input-luxe w-full p-2 text-xs">
@@ -574,11 +597,11 @@
                 <div id="sections-hub" class="mb-20">
                     <div class="text-center mb-16 space-y-6">
                         <i class="fas fa-dungeon text-primary-500 text-4xl opacity-80"></i>
-                        <h3 class="text-5xl font-display text-white uppercase">Arquivos da Chama</h3>
+                        <h3 class="text-3xl md:text-5xl font-display text-white uppercase">Arquivos da Chama</h3>
                         <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto"></div>
                         <p class="text-gray-500 text-xs uppercase tracking-[0.3em]">Escolha o portal que deseja atravessar</p>
                     </div>
-                    <div id="sections-cards-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div id="sections-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                         <div class="col-span-full text-center py-20">
                             <i class="fas fa-circle-notch fa-spin text-primary-900 text-4xl"></i>
                         </div>
@@ -587,12 +610,12 @@
 
                 <!-- TRILHA / PATH VIEW -->
                 <div id="active-path-view" class="hidden mb-20 relative">
-                    <button id="back-to-hub-btn" class="fixed top-28 left-6 z-30 text-primary-500/70 hover:text-primary-400 text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 transition bg-black/80 p-3 border border-primary-500/20 hover:border-primary-500 font-display">
+                    <button id="back-to-hub-btn" class="fixed top-20 md:top-28 left-4 md:left-6 z-30 text-primary-500/70 hover:text-primary-400 text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 transition bg-black/80 p-3 border border-primary-500/20 hover:border-primary-500 font-display">
                         <i class="fas fa-chevron-left"></i> Voltar aos Portais
                     </button>
 
-                    <div class="text-center mb-20 pt-8 relative z-10">
-                        <h2 id="path-title" class="text-4xl font-display text-white mb-4 uppercase text-gradient-gold"></h2>
+                    <div class="text-center mb-20 pt-12 md:pt-8 relative z-10">
+                        <h2 id="path-title" class="text-3xl md:text-4xl font-display text-white mb-4 uppercase text-gradient-gold"></h2>
                         <span class="text-gray-600 text-[10px] uppercase tracking-[0.5em] border-t border-b border-gray-800 py-2">Trilha de Ascensão</span>
                     </div>
 
@@ -607,12 +630,12 @@
 
             <!-- PERFIL -->
             <div id="profile-view" class="view-container hidden max-w-2xl mx-auto pt-10 px-4">
-                 <div class="bg-royal border border-white/10 p-10 relative overflow-hidden shadow-2xl text-center">
+                 <div class="bg-royal border border-white/10 p-6 md:p-10 relative overflow-hidden shadow-2xl text-center">
                      <i class="fas fa-id-card-alt text-6xl text-white/5 absolute top-5 right-5"></i>
-                     <h2 class="text-3xl font-display text-white mb-2">Credencial da Ordem</h2>
+                     <h2 class="text-2xl md:text-3xl font-display text-white mb-2">Credencial da Ordem</h2>
                      <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-primary-500 to-transparent my-6 opacity-30"></div>
                      <p class="text-xs text-primary-500 uppercase tracking-widest mb-2">Identidade Espiritual</p>
-                     <p id="profile-email-display" class="text-xl text-white font-display tracking-wider mb-6"></p>
+                     <p id="profile-email-display" class="text-lg md:text-xl text-white font-display tracking-wider mb-6 break-words"></p>
                      <p id="profile-status-display" class="text-xs font-bold uppercase tracking-[0.2em] mb-4"></p>
                      
                      <p id="profile-admin-badge" class="hidden inline-block border border-accent/50 text-accent px-4 py-2 text-[10px] uppercase tracking-[0.2em] font-bold">
@@ -629,7 +652,7 @@
 
         <!-- MODAL DE LOGIN -->
         <div id="login-view" class="view-container hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
-            <div class="w-full max-w-md relative bg-royal p-12 border border-primary-500/20 shadow-[0_0_100px_rgba(0,0,0,1)]">
+            <div class="w-full max-w-md relative bg-royal p-8 md:p-12 border border-primary-500/20 shadow-[0_0_100px_rgba(0,0,0,1)]">
                 <button id="close-login-btn" class="absolute top-4 right-4 text-gray-600 hover:text-white transition"><i class="fas fa-times"></i></button>
                 
                 <div class="text-center mb-12">
@@ -661,7 +684,7 @@
         <div id="post-view" class="view-container hidden fixed inset-0 z-[60] bg-black overflow-y-auto custom-scrollbar">
             <div class="max-w-6xl mx-auto min-h-screen bg-royal border-x border-white/5 relative shadow-2xl">
                 <!-- Top Bar -->
-                <div class="sticky top-0 z-20 bg-royal/95 backdrop-blur border-b border-white/5 p-4 flex justify-between items-center h-20 shadow-lg px-8">
+                <div class="sticky top-0 z-20 bg-royal/95 backdrop-blur border-b border-white/5 p-4 flex justify-between items-center h-16 md:h-20 shadow-lg px-4 md:px-8">
                     <button id="back-to-posts-btn" class="text-gray-400 text-[10px] uppercase tracking-[0.2em] hover:text-primary-400 transition flex items-center gap-3 group font-display">
                         <i class="fas fa-long-arrow-alt-left text-lg group-hover:-translate-x-1 transition"></i> Retornar
                     </button>
@@ -679,16 +702,16 @@
                         </div>
                     </div>
 
-                    <div class="p-8 md:p-16 pb-32">
+                    <div class="p-6 md:p-16 pb-32">
                         <!-- TÍTULO E DOWNLOAD -->
-                        <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-12 border-b border-white/5 pb-12">
+                        <div class="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12 mb-8 md:mb-12 border-b border-white/5 pb-8 md:pb-12">
                             <div class="flex-1 space-y-4">
                                 <span class="text-accent text-[9px] uppercase tracking-[0.4em] font-bold block border-l-2 border-accent pl-3">Rito em Andamento</span>
-                                <h1 id="post-view-title" class="text-4xl md:text-5xl font-display text-white leading-tight uppercase"></h1>
-                                <h3 id="post-view-subtitle" class="text-xl text-primary-500 font-display italic"></h3>
+                                <h1 id="post-view-title" class="text-2xl md:text-5xl font-display text-white leading-tight uppercase"></h1>
+                                <h3 id="post-view-subtitle" class="text-lg md:text-xl text-primary-500 font-display italic"></h3>
                             </div>
                             
-                            <a id="post-view-pdf-btn" href="#" target="_blank" class="shrink-0 bg-black border border-primary-900 hover:border-primary-500 text-gray-300 hover:text-white px-8 py-5 font-display font-bold uppercase tracking-[0.2em] text-[10px] flex items-center gap-4 transition group">
+                            <a id="post-view-pdf-btn" href="#" target="_blank" class="w-full md:w-auto shrink-0 bg-black border border-primary-900 hover:border-primary-500 text-gray-300 hover:text-white px-8 py-5 font-display font-bold uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 transition group">
                                 <i class="fas fa-scroll text-2xl text-primary-500 group-hover:text-white transition"></i> 
                                 <div class="text-left">
                                     <span class="block text-[8px] text-gray-600">Documento Sagrado</span>
@@ -701,7 +724,7 @@
                         <div class="mb-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
                             <div class="lg:col-span-2">
                                 <h4 class="text-gray-600 text-[10px] uppercase tracking-[0.2em] mb-6"><i class="fas fa-align-left mr-2"></i>Escrituras do Mestre</h4>
-                                <div id="post-view-content" class="prose prose-invert max-w-none text-gray-400 font-body leading-loose text-justify border-l border-white/5 pl-6"></div>
+                                <div id="post-view-content" class="prose prose-invert max-w-none text-gray-400 font-body leading-loose text-justify border-l border-white/5 pl-6 text-sm md:text-base"></div>
                             </div>
                             
                             <!-- BOTÃO CONCLUIR (LADO DIREITO) -->
@@ -716,7 +739,7 @@
                         
                         <!-- COMENTÁRIOS -->
                         <div id="comments-section" class="border-t border-white/5 pt-12">
-                             <h3 class="text-2xl font-display text-white mb-8"><i class="fas fa-comments text-primary-900 mr-3"></i> Diálogo da Ordem</h3>
+                             <h3 class="text-xl md:text-2xl font-display text-white mb-8"><i class="fas fa-comments text-primary-900 mr-3"></i> Diálogo da Ordem</h3>
                              
                              <div id="comments-list" class="space-y-6 mb-10"></div>
                              
@@ -792,9 +815,22 @@
         const adminPanel = document.getElementById('admin-panel');
         const sectionsHub = document.getElementById('sections-hub');
         const activePathView = document.getElementById('active-path-view');
+        
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
 
         // === NAV ===
         window.showView = function(viewId) {
+            // Close mobile menu on nav
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+
             ['home-view', 'blog-view', 'profile-view', 'post-view', 'login-view'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
@@ -913,6 +949,9 @@
         });
 
         onAuthStateChanged(auth, async (user) => {
+            const mobileActions = document.getElementById('mobile-user-actions');
+            mobileActions.innerHTML = ''; // Clear mobile actions
+
             if (user) {
                 currentUser = user;
                 userInfo.style.display = 'flex';
@@ -920,6 +959,20 @@
                 document.getElementById('header-user-name').textContent = user.email.split('@')[0];
                 document.getElementById('profile-email-display').textContent = user.email;
                 document.getElementById('comment-form-container').classList.remove('hidden');
+
+                // Mobile Menu Logic for Logged User
+                const profileBtn = document.createElement('button');
+                profileBtn.className = "text-xs font-display font-bold tracking-[0.2em] text-white py-2 uppercase";
+                profileBtn.textContent = "Meu Perfil";
+                profileBtn.onclick = () => showView('profile-view');
+                mobileActions.appendChild(profileBtn);
+
+                const logoutMbl = document.createElement('button');
+                logoutMbl.className = "text-xs font-display font-bold tracking-[0.2em] text-red-500 py-2 uppercase";
+                logoutMbl.textContent = "Sair";
+                logoutMbl.onclick = () => signOut(auth);
+                mobileActions.appendChild(logoutMbl);
+
 
                 if (user.email === ADMIN_EMAIL) {
                     adminPanel.style.display = 'block'; 
@@ -960,6 +1013,14 @@
                 adminPanel.style.display = 'none';
                 document.querySelectorAll('.admin-only-controls').forEach(e => e.classList.add('hidden'));
                 document.getElementById('comment-form-container').classList.add('hidden');
+                
+                // Mobile Menu for Guest
+                const loginMbl = document.createElement('button');
+                loginMbl.className = "text-xs font-display font-bold tracking-[0.2em] text-primary-400 py-2 uppercase border border-primary-500/30";
+                loginMbl.textContent = "Acesso";
+                loginMbl.onclick = () => showView('login-view');
+                mobileActions.appendChild(loginMbl);
+
                 if(studentsUnsubscribe) studentsUnsubscribe(); 
             }
             fetchSections();
@@ -999,12 +1060,12 @@
 
                     if (isAllowed) {
                         const card = document.createElement('div');
-                        card.className = "project-card border border-white/5 p-10 relative group cursor-pointer flex flex-col items-center justify-center text-center min-h-[300px]";
+                        card.className = "project-card border border-white/5 p-6 md:p-10 relative group cursor-pointer flex flex-col items-center justify-center text-center min-h-[250px] md:min-h-[300px]";
                         card.onclick = () => openPath(s.id, s.name);
                         card.innerHTML = `
                             <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,215,0,0.1)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-700"></div>
-                            <i class="fas fa-dharmachakra text-6xl text-gray-800 mb-8 group-hover:text-primary-500 transition transform group-hover:rotate-180 duration-1000"></i>
-                            <h4 class="text-2xl font-display text-white mb-2 group-hover:text-primary-400 transition uppercase tracking-widest">${s.name}</h4>
+                            <i class="fas fa-dharmachakra text-5xl md:text-6xl text-gray-800 mb-6 md:mb-8 group-hover:text-primary-500 transition transform group-hover:rotate-180 duration-1000"></i>
+                            <h4 class="text-xl md:text-2xl font-display text-white mb-2 group-hover:text-primary-400 transition uppercase tracking-widest">${s.name}</h4>
                             <p class="text-[9px] text-gray-600 uppercase tracking-[0.4em]">Adentrar Portal</p>
                         `;
                         container.appendChild(card);
@@ -1263,6 +1324,13 @@
             document.getElementById('sections-hub').classList.remove('hidden');
         });
 
+        // Add Resize Event Listener to redraw path
+        window.addEventListener('resize', () => {
+            if(activeSectionId && !document.getElementById('active-path-view').classList.contains('hidden')) {
+                renderProfessionalPath(activeSectionId);
+            }
+        });
+
         // 🕰️ HELPER DE DATA PARA O CÁLCULO DE TRAVA DE TEMPO 🕰️
         function getNextMonday(date) {
             const d = new Date(date);
@@ -1286,8 +1354,13 @@
 
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("class", "path-svg-line");
-            const spacing = 180;
+            
+            // Responsive sizing
+            const isMobile = window.innerWidth < 768;
+            const spacing = isMobile ? 140 : 180;
             const totalHeight = (posts.length * spacing) + 200;
+            const curveWidth = isMobile ? 60 : 120; // Menor curva no mobile
+
             container.style.height = totalHeight + 'px';
             svg.style.height = totalHeight + 'px';
             container.appendChild(svg);
@@ -1298,55 +1371,26 @@
             let prevY = 50;
 
             // 🕰️ LÓGICA DE GRUPOS DE 3 (SEMANAL)
-            // Calculamos o último índice disponível baseado no tempo
             let maxUnlockedIndex = 9999;
             
             if (currentUser && currentUser.email !== ADMIN_EMAIL) {
-                maxUnlockedIndex = 0; // Começa liberando só o grupo 0 (index 0,1,2)
-                
-                // Itera pelos GRUPOS de 3
+                maxUnlockedIndex = 0; 
                 for (let group = 0; group < 100; group++) {
-                    // Pega o último post do grupo anterior
-                    // Grupo 0: posts 0,1,2.
-                    // Para desbloquear Grupo 1, precisamos ter terminado Grupo 0 E esperado até segunda.
                     const lastPostOfPrevGroupIndex = ((group) * 3) - 1; 
-                    
-                    if (lastPostOfPrevGroupIndex < 0) {
-                        // Grupo 0 é sempre liberado inicialmente
-                        maxUnlockedIndex = 2; // Libera índices 0,1,2
-                        continue;
-                    }
-
-                    // Checa se o post final do grupo anterior existe
+                    if (lastPostOfPrevGroupIndex < 0) { maxUnlockedIndex = 2; continue; }
                     if (lastPostOfPrevGroupIndex >= posts.length) break;
-
                     const lastPostOfPrevGroup = posts[lastPostOfPrevGroupIndex];
                     
-                    // Checa se completou o último post do grupo anterior
                     if (completedPosts.includes(lastPostOfPrevGroup.id)) {
-                        
-                        // RECUPERA DATA DE CONCLUSÃO
-                        // Fallback para epoch 0 se não tiver data (compatibilidade com contas antigas)
                         let compDate = new Date(0); 
                         if (currentUserData && currentUserData.completionDates && currentUserData.completionDates[lastPostOfPrevGroup.id]) {
                             compDate = currentUserData.completionDates[lastPostOfPrevGroup.id].toDate();
                         }
-
-                        // Calcula próxima segunda-feira após a conclusão
                         const unlockDate = getNextMonday(compDate);
                         const now = new Date();
-
-                        if (now >= unlockDate) {
-                            // Passou do tempo! Desbloqueia o próximo grupo (ex: libera +3)
-                            maxUnlockedIndex = ((group + 1) * 3) - 1;
-                        } else {
-                            // Travado pelo tempo. Pare de calcular.
-                            break;
-                        }
-                    } else {
-                        // Não completou o grupo anterior, então não libera o próximo
-                        break;
-                    }
+                        if (now >= unlockDate) { maxUnlockedIndex = ((group + 1) * 3) - 1; } 
+                        else { break; }
+                    } else { break; }
                 }
             }
 
@@ -1354,25 +1398,17 @@
                 const isCompleted = completedPosts.includes(p.id);
                 const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
                 
-                // LÓGICA DE BLOQUEIO:
-                // 1. Sequencial padrão: Anterior deve estar completo (exceto o primeiro).
-                // 2. Trava de Tempo (Segunda-feira): Index deve ser <= maxUnlockedIndex.
-                
                 let isLocked = false;
                 let isTimeLocked = false;
 
                 if (!isAdmin) {
-                    if (i > maxUnlockedIndex) {
-                        isLocked = true;
-                        isTimeLocked = true; // Travado especificamente pelo sistema de semanas
-                    } else if (i > 0 && !completedPosts.includes(posts[i-1].id)) {
-                        isLocked = true; // Travado porque não fez o anterior
-                    }
+                    if (i > maxUnlockedIndex) { isLocked = true; isTimeLocked = true; } 
+                    else if (i > 0 && !completedPosts.includes(posts[i-1].id)) { isLocked = true; }
                 }
                 
                 // SVG Drawing
                 const y = 50 + (i * spacing);
-                const x = centerX + Math.sin(i * 1.5) * (window.innerWidth < 768 ? 60 : 120);
+                const x = centerX + Math.sin(i * 1.5) * curveWidth;
 
                 if (i === 0) pathD += `M ${x} ${y}`;
                 else pathD += ` Q ${prevX} ${(prevY + y) / 2}, ${x} ${y}`;
@@ -1384,10 +1420,10 @@
                 node.style.top = y + 'px';
                 
                 let statusClass = isLocked ? 'status-locked' : (isCompleted ? 'status-completed' : 'status-active');
-                if (isTimeLocked) statusClass += ' status-time-locked'; // Adiciona estilo especial para trava de tempo
+                if (isTimeLocked) statusClass += ' status-time-locked';
 
                 let icon = isLocked ? 'fa-lock' : (isCompleted ? 'fa-crown' : 'fa-fire');
-                if (isTimeLocked) icon = 'fa-hourglass-half'; // Ícone de ampulheta para trava de tempo
+                if (isTimeLocked) icon = 'fa-hourglass-half';
 
                 let clickFn = `openClass('${p.id}')`;
                 if (isTimeLocked) {
