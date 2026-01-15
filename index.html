@@ -143,11 +143,10 @@
             transition: opacity 2s ease-out;
         }
         .intro-logo {
-            width: 300px; /* Aumentei para destaque */
+            width: 300px; 
             height: auto; 
             object-fit: contain;
             animation: pulseIntro 3s infinite alternate;
-            /* Removida borda e arredondamento para ser "full" */
         }
         @keyframes pulseIntro {
             0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 134, 11, 0.1)); }
@@ -188,7 +187,6 @@
             background: #050505; border: 2px solid #222; color: #333; cursor: not-allowed;
         }
         
-        /* Time Lock Special Style */
         .game-node.status-time-locked {
             background: #0a0000; border: 2px dashed #500; color: #500; cursor: not-allowed; opacity: 0.7;
         }
@@ -201,7 +199,6 @@
         }
         .path-node-wrapper:hover .node-label { opacity: 1; transform: translateX(-50%) translateY(0); }
         
-        /* Tooltip para Bloqueio de Tempo */
         .locked-tooltip {
             position: absolute; bottom: 85px; background: #2a0000; color: #ff8888; padding: 8px 12px; border: 1px solid #800;
             font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; text-align: center;
@@ -538,7 +535,7 @@
                         </form>
 
                         <div class="space-y-8">
-                            <!-- Gestão de Alunos -->
+                            <!-- Gestão de Alunos (AVANÇADA) -->
                             <div class="bg-black/40 p-6 border border-white/5 flex flex-col h-full relative group">
                                 <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-accent/20 opacity-0 group-hover:opacity-100 transition duration-500 blur"></div>
                                 <div class="relative bg-black p-4 h-full">
@@ -550,12 +547,12 @@
                                     <form id="create-account-form" class="flex flex-col gap-3 mb-6">
                                         <input type="email" id="new-email" placeholder="Email do Neófito" class="input-luxe p-3 text-xs" required>
                                         <input type="password" id="new-password" placeholder="Senha de Acesso" class="input-luxe p-3 text-xs" required>
-                                        <button type="submit" id="create-student-btn" class="bg-white/5 hover:bg-white/10 text-gray-300 py-2 text-[10px] uppercase tracking-widest transition border border-white/10">Registrar</button>
+                                        <button type="submit" id="create-student-btn" class="bg-white/5 hover:bg-white/10 text-gray-300 py-2 text-[10px] uppercase tracking-widest transition border border-white/10">Registrar (+30 dias)</button>
                                         <p id="account-status" class="text-xs h-4 text-center"></p>
                                     </form>
 
                                     <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[250px]">
-                                        <div id="students-list-container" class="space-y-1"></div>
+                                        <div id="students-list-container" class="space-y-2"></div>
                                     </div>
                                 </div>
                             </div>
@@ -616,6 +613,7 @@
                      <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-primary-500 to-transparent my-6 opacity-30"></div>
                      <p class="text-xs text-primary-500 uppercase tracking-widest mb-2">Identidade Espiritual</p>
                      <p id="profile-email-display" class="text-xl text-white font-display tracking-wider mb-6"></p>
+                     <p id="profile-status-display" class="text-xs font-bold uppercase tracking-[0.2em] mb-4"></p>
                      
                      <p id="profile-admin-badge" class="hidden inline-block border border-accent/50 text-accent px-4 py-2 text-[10px] uppercase tracking-[0.2em] font-bold">
                         <i class="fas fa-crown mr-2"></i> Magister Templi
@@ -733,6 +731,22 @@
             </div>
         </div>
 
+        <!-- MODAL DE SELEÇÃO DE MÓDULOS -->
+        <div id="student-modules-modal" class="view-container hidden fixed inset-0 z-[70] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="w-full max-w-md relative bg-royal p-8 border border-primary-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+                <button onclick="document.getElementById('student-modules-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-600 hover:text-white transition"><i class="fas fa-times"></i></button>
+                
+                <h3 class="text-xl font-display text-white mb-2 uppercase tracking-widest text-center">Permissões de Acesso</h3>
+                <p id="modal-student-email" class="text-[10px] text-primary-500 uppercase tracking-widest text-center mb-6"></p>
+                
+                <div id="modal-modules-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar mb-6 p-2">
+                    <!-- Checkboxes de módulos aqui -->
+                </div>
+
+                <button id="save-modules-btn" class="w-full bg-primary-900/20 border border-primary-500 text-primary-400 py-3 text-[10px] uppercase tracking-[0.3em] hover:bg-primary-500 hover:text-black transition font-bold">Salvar Permissões</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- FIREBASE MODULE -->
@@ -768,6 +782,7 @@
         let commentsUnsubscribe = null;
         let isRegisterMode = false;
         let studentsUnsubscribe = null; 
+        let editingStudentId = null;
 
         // UI REFS
         const loadingSpinner = document.getElementById('loading-spinner');
@@ -783,7 +798,7 @@
             ['home-view', 'blog-view', 'profile-view', 'post-view', 'login-view'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
-                    if(id === 'post-view' || id === 'login-view') el.style.display = 'none'; 
+                    if(id === 'post-view' || id === 'login-view' || id === 'student-modules-modal') el.style.display = 'none'; 
                     else el.style.display = (id === viewId) ? 'block' : 'none';
                 }
             });
@@ -795,13 +810,33 @@
             if(viewId === 'post-view') document.getElementById('post-view').style.display = 'block';
 
             if(viewId === 'blog-view') {
+                // VERIFICA ACESSO GLOBAL AO BLOG
+                if (currentUserData) {
+                    const now = new Date();
+                    const expiresAt = currentUserData.accessExpiresAt ? currentUserData.accessExpiresAt.toDate() : null;
+                    const isRevoked = currentUserData.isRevoked === true;
+
+                    if (currentUser.email !== ADMIN_EMAIL) {
+                        if (isRevoked) {
+                            alert("Acesso Revogado pela Alta Ordem.");
+                            showView('home-view');
+                            return;
+                        }
+                        if (expiresAt && now > expiresAt) {
+                            alert("Seu tempo de iniciação expirou. Renove seu acesso.");
+                            showView('home-view');
+                            return;
+                        }
+                    }
+                }
+
                 if(!activeSectionId) {
                     sectionsHub.classList.remove('hidden');
                     activePathView.classList.add('hidden');
                 } else {
                     sectionsHub.classList.add('hidden');
                     activePathView.classList.remove('hidden');
-                    renderProfessionalPath(activeSectionId); // RENDERIZA A TRILHA (AGORA COM LÓGICA DE TEMPO)
+                    renderProfessionalPath(activeSectionId); 
                 }
             }
             window.scrollTo(0,0);
@@ -853,11 +888,19 @@
             try {
                 if (isRegisterMode) {
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                    // DEFAULT: 30 dias de acesso
+                    const expires = new Date();
+                    expires.setDate(expires.getDate() + 30);
+                    
                     await setDoc(doc(db, "users", cred.user.uid), { 
                         email, 
                         createdAt: new Date(), 
                         completedPosts: [],
-                        completionDates: {} // Inicia objeto de datas vazio
+                        completionDates: {},
+                        role: 'student',
+                        accessExpiresAt: expires,
+                        allowedSections: [], // Nenhuma seção por padrão, ou todas? Vamos deixar vazio para o admin liberar.
+                        isRevoked: false
                     });
                     window.location.reload();
                 } else {
@@ -893,6 +936,19 @@
                 if(userDoc.exists()) {
                     currentUserData = userDoc.data();
                     completedPosts = currentUserData.completedPosts || [];
+                    
+                    // Show expiration on profile
+                    const statusDisplay = document.getElementById('profile-status-display');
+                    if(currentUserData.isRevoked) {
+                        statusDisplay.textContent = "STATUS: REVOGADO";
+                        statusDisplay.className = "text-xs font-bold uppercase tracking-[0.2em] mb-4 text-red-500";
+                    } else if (currentUserData.accessExpiresAt) {
+                        const expDate = currentUserData.accessExpiresAt.toDate();
+                        statusDisplay.textContent = `Vence em: ${expDate.toLocaleDateString()}`;
+                        statusDisplay.className = (new Date() > expDate) ? "text-xs font-bold uppercase tracking-[0.2em] mb-4 text-red-500" : "text-xs font-bold uppercase tracking-[0.2em] mb-4 text-green-500";
+                    } else {
+                        statusDisplay.textContent = "STATUS: INFINITO";
+                    }
                 }
                 
                 if(document.getElementById('login-view').style.display === 'flex') showView('blog-view');
@@ -932,16 +988,27 @@
                     select.add(new Option(s.name, s.id));
                     listAdmin.innerHTML += `<div class="flex justify-between p-2 border-b border-white/5 uppercase">${s.name} <button onclick="deleteSection('${s.id}')" class="text-red-900 hover:text-red-500"><i class="fas fa-times"></i></button></div>`;
                     
-                    const card = document.createElement('div');
-                    card.className = "project-card border border-white/5 p-10 relative group cursor-pointer flex flex-col items-center justify-center text-center min-h-[300px]";
-                    card.onclick = () => openPath(s.id, s.name);
-                    card.innerHTML = `
-                        <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,215,0,0.1)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-700"></div>
-                        <i class="fas fa-dharmachakra text-6xl text-gray-800 mb-8 group-hover:text-primary-500 transition transform group-hover:rotate-180 duration-1000"></i>
-                        <h4 class="text-2xl font-display text-white mb-2 group-hover:text-primary-400 transition uppercase tracking-widest">${s.name}</h4>
-                        <p class="text-[9px] text-gray-600 uppercase tracking-[0.4em]">Adentrar Portal</p>
-                    `;
-                    container.appendChild(card);
+                    // LÓGICA DE FILTRAGEM DE MÓDULOS PARA O ALUNO
+                    let isAllowed = true;
+                    if (currentUser && currentUser.email !== ADMIN_EMAIL) {
+                        // Se não tiver allowedSections ou se o ID não estiver lá, bloqueia
+                        if (!currentUserData?.allowedSections || !currentUserData.allowedSections.includes(s.id)) {
+                            isAllowed = false;
+                        }
+                    }
+
+                    if (isAllowed) {
+                        const card = document.createElement('div');
+                        card.className = "project-card border border-white/5 p-10 relative group cursor-pointer flex flex-col items-center justify-center text-center min-h-[300px]";
+                        card.onclick = () => openPath(s.id, s.name);
+                        card.innerHTML = `
+                            <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,215,0,0.1)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-700"></div>
+                            <i class="fas fa-dharmachakra text-6xl text-gray-800 mb-8 group-hover:text-primary-500 transition transform group-hover:rotate-180 duration-1000"></i>
+                            <h4 class="text-2xl font-display text-white mb-2 group-hover:text-primary-400 transition uppercase tracking-widest">${s.name}</h4>
+                            <p class="text-[9px] text-gray-600 uppercase tracking-[0.4em]">Adentrar Portal</p>
+                        `;
+                        container.appendChild(card);
+                    }
                 });
             });
         }
@@ -954,7 +1021,7 @@
             });
         }
 
-        // === ADMIN LOGIC ===
+        // === ADMIN LOGIC (STUDENTS) ===
         function fetchStudents() {
             const listContainer = document.getElementById('students-list-container');
             const countBadge = document.getElementById('student-count');
@@ -964,20 +1031,62 @@
                 listContainer.innerHTML = '';
                 let count = 0;
                 snap.forEach(d => {
-                    // Ignora o admin na lista pelo email
+                    // Ignora o admin na lista
                     if (d.data().email === ADMIN_EMAIL) return; 
                     
                     count++;
                     const user = d.data();
+                    const uid = d.id;
+                    
+                    // Cálculo de Vencimento
+                    let expiryText = "Sem data";
+                    let statusColor = "text-gray-500";
+                    let isExpired = false;
+                    
+                    if (user.accessExpiresAt) {
+                        const expDate = user.accessExpiresAt.toDate();
+                        const now = new Date();
+                        const diffTime = expDate - now;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        
+                        if (diffDays < 0) {
+                            expiryText = "EXPIRADO";
+                            statusColor = "text-orange-500";
+                            isExpired = true;
+                        } else {
+                            expiryText = `${diffDays} dias`;
+                            statusColor = "text-green-500";
+                        }
+                    }
+
+                    if (user.isRevoked) {
+                        expiryText = "BANIDO";
+                        statusColor = "text-red-600 font-bold";
+                    }
+
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center p-3 bg-white/5 border border-white/5 hover:bg-white/10 transition";
+                    row.className = "flex flex-col gap-2 p-3 bg-white/5 border border-white/5 hover:bg-white/10 transition mb-2";
+                    
+                    // Botões de Ação
+                    // +Mês, -Mês, Revogar/Ativar, Modulos
+                    
+                    const revokeIcon = user.isRevoked ? 'fa-user-check' : 'fa-skull';
+                    const revokeTitle = user.isRevoked ? 'Reativar Acesso' : 'Revogar Acesso (Banir)';
+                    const revokeColor = user.isRevoked ? 'text-green-500' : 'text-red-500';
+
                     row.innerHTML = `
-                        <div class="overflow-hidden">
-                            <p class="text-[10px] text-gray-300 truncate font-display tracking-wider">${user.email}</p>
+                        <div class="flex justify-between items-center w-full">
+                            <div class="overflow-hidden">
+                                <p class="text-[10px] text-gray-300 truncate font-display tracking-wider">${user.email}</p>
+                                <p class="text-[9px] ${statusColor} uppercase tracking-wide">Status: ${expiryText}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="manageStudent('${uid}', 'modules', '${user.email}')" class="text-primary-400 hover:text-white transition" title="Permissões de Módulos"><i class="fas fa-book"></i></button>
+                                <button onclick="manageStudent('${uid}', 'addMonth')" class="text-green-400 hover:text-white transition" title="+1 Mês"><i class="fas fa-calendar-plus"></i></button>
+                                <button onclick="manageStudent('${uid}', 'subMonth')" class="text-orange-400 hover:text-white transition" title="-1 Mês"><i class="fas fa-calendar-minus"></i></button>
+                                <button onclick="manageStudent('${uid}', 'toggleRevoke')" class="${revokeColor} hover:text-white transition" title="${revokeTitle}"><i class="fas ${revokeIcon}"></i></button>
+                            </div>
                         </div>
-                        <button onclick="deleteStudent('${d.id}')" class="text-red-900 hover:text-red-500 transition px-2">
-                            <i class="fas fa-skull"></i>
-                        </button>
                     `;
                     listContainer.appendChild(row);
                 });
@@ -985,6 +1094,83 @@
                 if (count === 0) listContainer.innerHTML = '<p class="text-center text-gray-600 text-[10px] uppercase tracking-widest py-4">Nenhum neófito registrado.</p>';
             });
         }
+
+        window.manageStudent = async (uid, action, email = "") => {
+            const userRef = doc(db, "users", uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) return;
+            
+            const userData = userSnap.data();
+            let newDate = userData.accessExpiresAt ? userData.accessExpiresAt.toDate() : new Date();
+
+            try {
+                if (action === 'addMonth') {
+                    newDate.setDate(newDate.getDate() + 30);
+                    await updateDoc(userRef, { accessExpiresAt: newDate, isRevoked: false }); // Se adicionar tempo, desbane se tiver banido
+                } 
+                else if (action === 'subMonth') {
+                    newDate.setDate(newDate.getDate() - 30);
+                    await updateDoc(userRef, { accessExpiresAt: newDate });
+                }
+                else if (action === 'toggleRevoke') {
+                    await updateDoc(userRef, { isRevoked: !userData.isRevoked });
+                }
+                else if (action === 'modules') {
+                    openModuleModal(uid, email, userData.allowedSections || []);
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Erro ao executar ritual administrativo.");
+            }
+        };
+
+        // MODULE MODAL LOGIC
+        function openModuleModal(uid, email, allowedSections) {
+            editingStudentId = uid;
+            const modal = document.getElementById('student-modules-modal');
+            const list = document.getElementById('modal-modules-list');
+            document.getElementById('modal-student-email').textContent = email;
+            
+            list.innerHTML = '';
+            
+            if (allSections.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-xs italic">Crie trilhas primeiro.</p>';
+            } else {
+                allSections.forEach(sec => {
+                    const isChecked = allowedSections.includes(sec.id) ? 'checked' : '';
+                    const div = document.createElement('div');
+                    div.className = "flex items-center gap-3 p-2 border border-white/5 bg-black/50";
+                    div.innerHTML = `
+                        <input type="checkbox" id="chk-${sec.id}" value="${sec.id}" ${isChecked} class="accent-primary-500 h-4 w-4">
+                        <label for="chk-${sec.id}" class="text-gray-300 text-xs uppercase tracking-wider cursor-pointer select-none flex-1">${sec.name}</label>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+            
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        document.getElementById('save-modules-btn').addEventListener('click', async () => {
+            if (!editingStudentId) return;
+            
+            const checkboxes = document.querySelectorAll('#modal-modules-list input[type="checkbox"]');
+            const selectedIds = [];
+            checkboxes.forEach(chk => {
+                if (chk.checked) selectedIds.push(chk.value);
+            });
+
+            try {
+                await updateDoc(doc(db, "users", editingStudentId), { allowedSections: selectedIds });
+                document.getElementById('student-modules-modal').classList.add('hidden');
+                document.getElementById('student-modules-modal').style.display = 'none';
+                editingStudentId = null;
+            } catch(e) {
+                console.error(e);
+                alert("Falha ao salvar permissões.");
+            }
+        });
 
         document.getElementById('create-account-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1000,8 +1186,20 @@
                 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
                 const secondaryAuth = getAuth(secondaryApp);
                 const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+                
+                // DATA DE EXPIRAÇÃO PADRÃO: +30 DIAS
+                const expires = new Date();
+                expires.setDate(expires.getDate() + 30);
+
                 await setDoc(doc(db, "users", userCred.user.uid), {
-                    email: email, createdAt: new Date(), completedPosts: [], completionDates: {}, role: 'student'
+                    email: email, 
+                    createdAt: new Date(), 
+                    completedPosts: [], 
+                    completionDates: {}, 
+                    role: 'student',
+                    accessExpiresAt: expires,
+                    allowedSections: [], // Nenhuma seção por padrão
+                    isRevoked: false
                 });
                 await signOut(secondaryAuth);
                 await deleteApp(secondaryApp);
