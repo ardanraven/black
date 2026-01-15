@@ -38,7 +38,19 @@
                     },
                     animation: { 
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 12s linear infinite'
+                        'spin-slow': 'spin 12s linear infinite',
+                        'fade-in-slow': 'fadeIn 2s ease-in forwards',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
                     }
                 }
             }
@@ -123,15 +135,24 @@
             opacity: 0.3;
         }
 
-        /* SVG ESTRELA DA MANHÃ */
-        .morning-star-svg {
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
-            animation: floatStar 6s ease-in-out infinite alternate;
+        /* INTRO CINEMATOGRÁFICA */
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 100; 
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 2s ease-out;
         }
-        .star-core { transform-origin: center; animation: spin-slow 20s linear infinite; }
-        .star-rays { transform-origin: center; animation: pulse-slow 4s ease-in-out infinite; }
-        
-        @keyframes floatStar { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
+        .intro-logo {
+            width: 300px; /* Aumentei para destaque */
+            height: auto; 
+            object-fit: contain;
+            animation: pulseIntro 3s infinite alternate;
+            /* Removida borda e arredondamento para ser "full" */
+        }
+        @keyframes pulseIntro {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 134, 11, 0.1)); }
+            100% { transform: scale(1.02); filter: drop-shadow(0 0 30px rgba(184, 134, 11, 0.4)); }
+        }
 
         /* TRILHA (PATH SYSTEM) */
         .path-container-wrapper {
@@ -195,9 +216,32 @@
         }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
+        /* Floating WhatsApp Button */
+        .float-wa {
+            position: fixed; width: 60px; height: 60px; bottom: 40px; right: 40px;
+            background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px;
+            box-shadow: 0px 0px 20px rgba(37, 211, 102, 0.4); z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .float-wa:hover { transform: scale(1.1); box-shadow: 0px 0px 30px rgba(37, 211, 102, 0.6); }
+
     </style>
 </head>
 <body class="antialiased font-body selection:bg-primary-900 selection:text-white">
+
+    <!-- INTRO DRAMÁTICA -->
+    <div id="intro-overlay">
+        <!-- Logo FULL sem cortes -->
+        <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Ordo Rex Lucifer Logo" class="intro-logo mb-8">
+        <h1 class="text-3xl font-display text-white tracking-[0.5em] uppercase opacity-0 animate-fade-in-slow" style="animation-delay: 0.5s;">Ordo Rex Lucifer</h1>
+        <p class="text-primary-500 text-xs tracking-[0.3em] uppercase mt-4 opacity-0 animate-fade-in-slow" style="animation-delay: 1.5s;">O Conhecimento é Poder</p>
+    </div>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/5521975685161" class="float-wa" target="_blank" title="Fale com o Sacerdote">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <div class="particle-container" id="particles"></div>
     <script>
@@ -218,6 +262,15 @@
             p.style.color = Math.random() > 0.7 ? '#FFD700' : '#8B0000';
             pContainer.appendChild(p);
         }
+
+        // Remove Intro
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-overlay');
+                intro.style.opacity = '0';
+                setTimeout(() => intro.style.display = 'none', 2000);
+            }, 3500); // Tempo da intro
+        });
     </script>
 
     <div id="app-root">
@@ -230,12 +283,11 @@
         </div>
 
         <!-- HEADER -->
-        <header class="fixed top-0 w-full z-40 bg-black/80 backdrop-blur-md border-b border-primary-500/10 h-24 transition-all duration-300">
+        <header class="fixed top-0 w-full z-40 bg-black/90 backdrop-blur-md border-b border-primary-500/10 h-24 transition-all duration-300">
             <div class="container mx-auto px-6 h-full flex justify-between items-center">
                 <div class="flex items-center gap-4 cursor-pointer group" onclick="showView('home-view')">
-                    <div class="h-12 w-12 bg-gradient-to-br from-primary-900 to-black rounded-sm flex items-center justify-center border border-primary-500/30 group-hover:border-primary-400 transition shadow-[0_0_15px_rgba(184,134,11,0.2)]">
-                        <i class="fas fa-crown text-primary-400 text-xl"></i>
-                    </div>
+                    <!-- LOGO DA ORDEM NO HEADER -->
+                    <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Logo" class="h-14 w-14 rounded-full border border-primary-500/30 group-hover:border-primary-400 transition shadow-[0_0_15px_rgba(184,134,11,0.2)] object-cover">
                     <div class="flex flex-col">
                         <span class="text-[9px] text-accent uppercase tracking-[0.4em] font-bold">Ordo</span>
                         <h1 class="text-xl font-display font-bold text-white tracking-widest group-hover:text-primary-400 transition">REX LUCIFER</h1>
@@ -245,6 +297,7 @@
                 <nav class="hidden md:flex items-center space-x-10">
                     <button data-view="home-view" class="internal-link text-[10px] font-display font-bold tracking-[0.2em] text-gray-500 hover:text-primary-400 uppercase transition">Templo</button>
                     <button data-view="blog-view" class="internal-link text-[10px] font-display font-bold tracking-[0.2em] text-gray-500 hover:text-primary-400 uppercase transition">Arquivos da Chama</button>
+                    <a href="https://wa.me/5521975685161" target="_blank" class="text-[10px] font-display font-bold tracking-[0.2em] text-gray-500 hover:text-green-400 uppercase transition"><i class="fab fa-whatsapp mr-1"></i> Contato</a>
                     
                     <div class="w-[1px] h-6 bg-primary-500/20"></div>
                     
@@ -265,15 +318,14 @@
 
         <main class="pt-24 min-h-screen relative z-10">
             
-            <!-- HOME VIEW REFORMULADA -->
+            <!-- HOME VIEW -->
             <div id="home-view" class="view-container">
                 <!-- HERO SECTION -->
                 <section class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
                     <!-- Fundo Sombrio com Brilho Central -->
                     <div class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(184,134,11,0.15)_0%,rgba(0,0,0,1)_70%)]"></div>
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-primary-500/5 rounded-full animate-pulse-slow pointer-events-none"></div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-primary-500/10 rounded-full pointer-events-none"></div>
-
+                    
                     <div class="relative z-10 max-w-5xl mx-auto space-y-8">
                         <div class="flex justify-center mb-6">
                             <i class="fas fa-fire text-3xl text-accent animate-pulse"></i>
@@ -300,76 +352,53 @@
                     </div>
                 </section>
 
-                <!-- FILOSOFIA & SOBRE (EXTENSA) -->
+                <!-- FILOSOFIA & O DRAGÃO (EXTENSA) -->
                 <section class="py-32 px-6 bg-obsidian border-t border-primary-900/20 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent pointer-events-none"></div>
+                    <!-- Fundo do Dragão -->
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://i.ibb.co/q4DcCM6/33333333.jpg" alt="Dragão Primordial" class="w-full h-full object-cover opacity-20 object-center">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+                    </div>
 
                     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center relative z-10">
                         <div class="order-2 md:order-1 space-y-10 text-justify">
                             <div>
                                 <h3 class="text-4xl font-display text-white mb-2 flex items-center gap-4">
-                                    <span class="text-primary-500 text-6xl opacity-50">I.</span> A Doutrina da Luz Oculta
+                                    <span class="text-primary-500 text-6xl opacity-50">I.</span> A Doutrina do Dragão
                                 </h3>
                                 <div class="h-[1px] w-24 bg-accent mt-4"></div>
                             </div>
                             
-                            <p class="text-gray-400 font-body leading-loose text-lg">
-                                O Luciferianismo, em sua essência, não é a adoração do mal, mas a reverência ao <strong>Intelecto Desperto</strong>. Lúcifer, o <em>Portador da Luz</em>, é o arquétipo daquele que questiona, que busca a sabedoria proibida e que se recusa a curvar-se diante da estagnação.
+                            <p class="text-gray-300 font-body leading-loose text-lg drop-shadow-lg">
+                                O Dragão é o símbolo máximo da energia primordial e indomada. Na <strong>Ordo Rex Lucifer</strong>, ele representa a força latente que reside na base da espinha de cada iniciado, pronta para despertar e ascender aos céus da consciência.
                             </p>
                             
-                            <p class="text-gray-400 font-body leading-loose text-lg">
-                                Sob a orientação do Sacerdote <strong>Black Lord</strong>, a Ordo Rex Lucifer oferece um caminho estruturado para aqueles que desejam retomar a coroa de sua própria existência. Rejeitamos a culpa herdada e abraçamos a responsabilidade total pelo nosso destino.
+                            <p class="text-gray-300 font-body leading-loose text-lg drop-shadow-lg">
+                                Não tememos a besta interior; nós a montamos. O Dragão é a soberania sobre os instintos, transformando o caos bruto em poder focado e vontade direcionada. Quem domina o Dragão, domina a si mesmo.
                             </p>
 
-                            <div class="bg-black/50 border-l-2 border-primary-500 p-6">
-                                <p class="text-primary-400 font-display italic text-lg mb-2">"A Chama Negra é a centelha divina individualizada. É a consciência que separa o Eu do Todo, permitindo a criação consciente."</p>
-                                <p class="text-gray-600 text-xs uppercase tracking-widest">— Codex Luciferi</p>
+                            <div class="bg-black/70 border-l-2 border-primary-500 p-6 backdrop-blur-sm">
+                                <p class="text-primary-400 font-display italic text-lg mb-2">"Do abismo primordial, o Dragão se ergue, não para destruir o mundo, mas para iluminar a mente daqueles que ousam olhar em seus olhos."</p>
+                                <p class="text-gray-500 text-xs uppercase tracking-widest">— Codex Draconis</p>
                             </div>
                         </div>
 
-                        <!-- ILUSTRAÇÃO SVG: A ESTRELA DA MANHÃ -->
-                        <div class="order-1 md:order-2 flex justify-center relative h-[500px] items-center">
-                             <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-accent/10 blur-[100px] rounded-full pointer-events-none animate-pulse"></div>
-                            
-                            <svg class="morning-star-svg w-full h-full max-w-md" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-                                        <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
-                                    </linearGradient>
-                                    <filter id="glow">
-                                        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                        <feMerge>
-                                            <feMergeNode in="coloredBlur"/>
-                                            <feMergeNode in="SourceGraphic"/>
-                                        </feMerge>
-                                    </filter>
-                                </defs>
-                                
-                                <g class="star-core" transform="translate(250,250)">
-                                    <polygon points="0,-100 22,-30 95,-30 36,15 58,85 0,45 -58,85 -36,15 -95,-30 -22,-30" fill="none" stroke="url(#starGradient)" stroke-width="2" />
-                                    <circle cx="0" cy="0" r="10" fill="#FFD700" filter="url(#glow)"/>
-                                </g>
-
-                                <g class="star-rays" transform="translate(250,250)">
-                                    <path d="M0,-180 L10,-40 L0,0 L-10,-40 Z" fill="url(#starGradient)" opacity="0.8" />
-                                    <path d="M0,180 L10,40 L0,0 L-10,40 Z" fill="url(#starGradient)" opacity="0.8" />
-                                    <path d="M180,0 L40,-10 L0,0 L40,10 Z" fill="url(#starGradient)" opacity="0.8" />
-                                    <path d="M-180,0 L-40,-10 L0,0 L-40,10 Z" fill="url(#starGradient)" opacity="0.8" />
-                                    
-                                    <path d="M120,-120 L30,-30 L0,0" stroke="#8B0000" stroke-width="1" opacity="0.6"/>
-                                    <path d="M-120,120 L-30,30 L0,0" stroke="#8B0000" stroke-width="1" opacity="0.6"/>
-                                    <path d="M120,120 L30,30 L0,0" stroke="#8B0000" stroke-width="1" opacity="0.6"/>
-                                    <path d="M-120,-120 L-30,-30 L0,0" stroke="#8B0000" stroke-width="1" opacity="0.6"/>
-                                </g>
-                                
-                                <circle cx="250" cy="250" r="160" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="5,10" opacity="0.5" class="animate-[spin_30s_linear_infinite]" />
-                            </svg>
+                        <!-- Imagem Lateral (Luciferiana) -->
+                        <div class="order-1 md:order-2 flex justify-center relative h-[600px] items-center group">
+                             <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-accent/10 blur-[50px] rounded-full pointer-events-none animate-pulse"></div>
+                             
+                             <div class="relative w-full h-full border border-primary-500/20 p-2 bg-black/50 backdrop-blur-sm transform group-hover:scale-[1.02] transition duration-700">
+                                 <img src="https://i.ibb.co/21p54bPq/22222222.jpg" alt="O Portador da Luz" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-700 grayscale group-hover:grayscale-0">
+                                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                                     <span class="text-primary-500 text-xs uppercase tracking-[0.3em] font-bold">Lucifer</span>
+                                     <h4 class="text-white font-display text-2xl uppercase">O Arquétipo da Liberdade</h4>
+                                 </div>
+                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- PILARES DA ORDEM (GRID) -->
+                <!-- PILARES DA ORDEM (GRID - REFEITO COM SVGs ANIMADOS) -->
                 <section class="py-24 px-6 bg-void relative overflow-hidden">
                     <div class="absolute top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
                     <div class="max-w-7xl mx-auto">
@@ -380,40 +409,72 @@
                         </div>
 
                         <div class="grid md:grid-cols-3 gap-8">
-                            <!-- Card 1 -->
-                            <div class="project-card border border-white/5 p-10 relative group cursor-pointer h-full" onclick="showView('blog-view')">
-                                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-30 transition duration-500">
-                                    <i class="fas fa-book-dead text-8xl text-primary-900"></i>
+                            <!-- Card 1 (Gnose) -->
+                            <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black" onclick="showView('blog-view')">
+                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-primary-900/20 transition duration-700">
+                                    <!-- SVG Gnose Animado -->
+                                    <svg class="w-24 h-24 text-primary-500 animate-float" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M50 10 L90 50 L50 90 L10 50 Z" class="opacity-50" />
+                                        <circle cx="50" cy="50" r="15" />
+                                        <path d="M50 35 L50 65 M35 50 L65 50" />
+                                    </svg>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <h4 class="text-2xl font-display text-primary-400 mb-6 group-hover:text-white transition uppercase">Gnose <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Conhecimento</span></h4>
-                                <p class="text-gray-400 text-sm leading-relaxed mb-8 min-h-[80px]">
-                                    Estudo profundo de magia cerimonial, psicologia sombria e filosofia ocultista. O saber é a única arma que não enferruja.
-                                </p>
-                                <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Explorar Arquivos <i class="fas fa-arrow-right"></i></span>
+                                <div class="p-8 relative">
+                                    <div class="absolute -top-10 right-6 bg-black border border-primary-500 p-3 rounded-full">
+                                        <i class="fas fa-book-dead text-2xl text-primary-500"></i>
+                                    </div>
+                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Gnose <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Conhecimento</span></h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                        Estudo profundo de magia cerimonial, psicologia sombria e filosofia ocultista. O saber é a única arma que não enferruja.
+                                    </p>
+                                    <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Explorar Arquivos <i class="fas fa-arrow-right"></i></span>
+                                </div>
                             </div>
 
-                            <!-- Card 2 -->
-                            <div class="project-card border border-white/5 p-10 relative group cursor-pointer h-full bg-royal">
-                                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-30 transition duration-500">
-                                    <i class="fas fa-fist-raised text-8xl text-accent"></i>
+                            <!-- Card 2 (Potentia) -->
+                            <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black">
+                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-accent/20 transition duration-700">
+                                    <!-- SVG Potentia Animado -->
+                                    <svg class="w-24 h-24 text-accent animate-pulse-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M50 15 Q80 15 80 50 Q80 85 50 85 Q20 85 20 50 Q20 15 50 15 Z" />
+                                        <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="currentColor" opacity="0.5"/>
+                                    </svg>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <h4 class="text-2xl font-display text-primary-400 mb-6 group-hover:text-white transition uppercase">Potentia <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Poder Pessoal</span></h4>
-                                <p class="text-gray-400 text-sm leading-relaxed mb-8 min-h-[80px]">
-                                    Práticas para fortalecer a Vontade. Rituais de empoderamento e a arte de moldar a realidade conforme o desejo do Magista.
-                                </p>
-                                <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Ver Rituais <i class="fas fa-fire"></i></span>
+                                <div class="p-8 relative">
+                                    <div class="absolute -top-10 right-6 bg-black border border-accent p-3 rounded-full">
+                                        <i class="fas fa-fist-raised text-2xl text-accent"></i>
+                                    </div>
+                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Potentia <span class="text-[10px] block text-gray-600 tracking-widest mt-1">Poder Pessoal</span></h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                        Práticas para fortalecer a Vontade. Rituais de empoderamento e a arte de moldar a realidade conforme o desejo do Magista.
+                                    </p>
+                                    <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Ver Rituais <i class="fas fa-fire"></i></span>
+                                </div>
                             </div>
 
-                            <!-- Card 3 -->
-                            <div class="project-card border border-white/5 p-10 relative group cursor-pointer h-full">
-                                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-30 transition duration-500">
-                                    <i class="fas fa-users text-8xl text-primary-900"></i>
+                            <!-- Card 3 (Fraternitas) -->
+                            <div class="project-card border border-white/5 p-0 relative group cursor-pointer h-full bg-black">
+                                <div class="h-48 overflow-hidden relative flex items-center justify-center bg-royal group-hover:bg-white/5 transition duration-700">
+                                    <!-- SVG Fraternitas Animado -->
+                                    <svg class="w-24 h-24 text-gray-400 animate-spin-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="50" cy="50" r="30" stroke-dasharray="5,5" />
+                                        <circle cx="50" cy="50" r="10" />
+                                        <path d="M50 20 L50 80 M20 50 L80 50" />
+                                    </svg>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                                 </div>
-                                <h4 class="text-2xl font-display text-primary-400 mb-6 group-hover:text-white transition uppercase">Fraternitas <span class="text-[10px] block text-gray-600 tracking-widest mt-1">O Círculo Interno</span></h4>
-                                <p class="text-gray-400 text-sm leading-relaxed mb-8 min-h-[80px]">
-                                    Uma comunidade seleta de iniciados. Aqui, a lealdade e a troca de experiências elevam todos os membros.
-                                </p>
-                                <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Unir-se à Ordem <i class="fas fa-user-plus"></i></span>
+                                <div class="p-8 relative">
+                                    <div class="absolute -top-10 right-6 bg-black border border-white/20 p-3 rounded-full">
+                                        <i class="fas fa-crown text-2xl text-white"></i>
+                                    </div>
+                                    <h4 class="text-2xl font-display text-primary-400 mb-4 group-hover:text-white transition uppercase">Fraternitas <span class="text-[10px] block text-gray-600 tracking-widest mt-1">O Círculo Interno</span></h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed mb-6 min-h-[60px]">
+                                        Uma comunidade seleta de iniciados. Aqui, a lealdade e a troca de experiências elevam todos os membros.
+                                    </p>
+                                    <span class="text-[10px] font-bold text-accent uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">Unir-se à Ordem <i class="fas fa-user-plus"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -574,7 +635,7 @@
                 <button id="close-login-btn" class="absolute top-4 right-4 text-gray-600 hover:text-white transition"><i class="fas fa-times"></i></button>
                 
                 <div class="text-center mb-12">
-                    <i class="fas fa-fire text-accent text-3xl mb-4"></i>
+                    <img src="https://i.ibb.co/BHPNVHbs/Whats-App-Image-2026-01-12-at-20-29-57.jpg" alt="Logo" class="h-20 w-20 mx-auto rounded-full border border-primary-500/30 mb-4 object-cover">
                     <h2 id="login-title" class="text-3xl font-display text-white tracking-[0.2em] uppercase">Sanctum</h2>
                     <div class="h-[1px] w-12 bg-accent mx-auto my-4"></div>
                     <p id="login-subtitle" class="text-[10px] text-gray-500 uppercase tracking-[0.4em]">Identifique-se</p>
@@ -693,8 +754,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // 🚨 MANTENHA O ADMIN UID AQUI 🚨
-        const ADMIN_UID = "COLE_SEU_UID_AQUI"; 
+        // 🚨 CONFIGURAÇÃO DE ADMIN 🚨
+        const ADMIN_EMAIL = "blacklord@rexlucifer.com"; 
 
         // STATE
         let currentUser = null;
@@ -817,7 +878,7 @@
                 document.getElementById('profile-email-display').textContent = user.email;
                 document.getElementById('comment-form-container').classList.remove('hidden');
 
-                if (user.uid === ADMIN_UID) {
+                if (user.email === ADMIN_EMAIL) {
                     adminPanel.style.display = 'block'; 
                     document.querySelectorAll('.admin-only-controls').forEach(e => e.classList.remove('hidden'));
                     document.getElementById('profile-admin-badge').classList.remove('hidden');
@@ -903,7 +964,9 @@
                 listContainer.innerHTML = '';
                 let count = 0;
                 snap.forEach(d => {
-                    if (d.id === ADMIN_UID) return; 
+                    // Ignora o admin na lista pelo email
+                    if (d.data().email === ADMIN_EMAIL) return; 
+                    
                     count++;
                     const user = d.data();
                     const row = document.createElement('div');
@@ -1040,7 +1103,7 @@
             // Calculamos o último índice disponível baseado no tempo
             let maxUnlockedIndex = 9999;
             
-            if (currentUser && currentUser.uid !== ADMIN_UID) {
+            if (currentUser && currentUser.email !== ADMIN_EMAIL) {
                 maxUnlockedIndex = 0; // Começa liberando só o grupo 0 (index 0,1,2)
                 
                 // Itera pelos GRUPOS de 3
@@ -1091,7 +1154,7 @@
 
             posts.forEach((p, i) => {
                 const isCompleted = completedPosts.includes(p.id);
-                const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
+                const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
                 
                 // LÓGICA DE BLOQUEIO:
                 // 1. Sequencial padrão: Anterior deve estar completo (exceto o primeiro).
